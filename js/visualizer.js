@@ -1,7 +1,7 @@
 let scene, camera, renderer;
 let layerCount = 0;
 let printing = false;
-let houseMesh;
+let wallGroup;
 
 init();
 animate();
@@ -17,19 +17,11 @@ function init() {
     light.position.set(5,10,7.5);
     scene.add(light);
 
-    camera.position.z = 10;
+    camera.position.set(10, 10, 10);
+    camera.lookAt(0, 0, 0);
 
-    createHouseModel('basic');
-}
-
-function createHouseModel(type) {
-    if (houseMesh) scene.remove(houseMesh);
-
-    const geometry = new THREE.BoxGeometry(5, 0.1, 5);
-    const material = new THREE.MeshLambertMaterial({ color: 0xd75627 });
-    houseMesh = new THREE.Mesh(geometry, material);
-    houseMesh.position.y = 0;
-    scene.add(houseMesh);
+    wallGroup = new THREE.Group();
+    scene.add(wallGroup);
 
     layerCount = 0;
     document.getElementById('stats').innerText = `Layers Printed: ${layerCount}`;
@@ -47,12 +39,30 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (printing && layerCount < 50) {
-        const newLayer = houseMesh.clone();
-        newLayer.position.y += (layerCount * 0.1);
-        scene.add(newLayer);
-        layerCount++;
-        document.getElementById('stats').innerText = `Layers Printed: ${layerCount}`;
-    }
+        const material = new THREE.MeshLambertMaterial({ color: 0xd75627 });
+        const wallThickness = 0.2;
+        const length = 5;
 
-    renderer.render(scene, camera);
-}
+        const walls = [
+            new THREE.BoxGeometry(length, wallThickness, wallThickness),  // Front wall
+            new THREE.BoxGeometry(length, wallThickness, wallThickness),  // Back wall
+            new THREE.BoxGeometry(wallThickness, wallThickness, length),  // Left wall
+            new THREE.BoxGeometry(wallThickness, wallThickness, length)   // Right wall
+        ];
+
+        const positions = [
+            [0, layerCount * wallThickness, length/2],
+            [0, layerCount * wallThickness, -length/2],
+            [-length/2, layerCount * wallThickness, 0],
+            [length/2, layerCount * wallThickness, 0]
+        ];
+
+        for (let i = 0; i < 4; i++) {
+            const mesh = new THREE.Mesh(walls[i], material);
+            mesh.position.set(...positions[i]);
+            wallGroup.add(mesh);
+        }
+
+        layerCount++;
+        document.getElementById('stats
+
