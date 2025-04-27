@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3DCP Visualizer</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #ui {
+            position: absolute; top: 10px; left: 10px; z-index: 10;
+            background: rgba(255,255,255,0.8); padding: 10px; border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <select id="houseSelector">
+            <option value="basic">Basic House</option>
+            <option value="garage">Garage</option>
+            <option value="tiny">Tiny Home</option>
+        </select>
+        <button onclick="startPrint()">Start Print</button>
+        <button onclick="pausePrint()">Pause</button>
+        <div id="stats">Layers Printed: 0</div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+    <script src="js/visualizer.js"></script>
+</body>
+</html>
